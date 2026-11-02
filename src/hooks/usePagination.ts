@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-// Define the information and functions returned by the hook.
+// Define all values and functions returned by the hook.
 interface PaginationResult {
     currentPage: number;
     totalPages: number;
@@ -14,29 +14,30 @@ interface PaginationResult {
     canPrevPage: boolean;
 }
 
-// Manage pagination for a collection of items.
+// Manage pagination for a list of items.
 export default function usePagination(
     totalItems: number,
     itemsPerPage: number = 10,
     initialPage: number = 1
 ): PaginationResult {
-    // Prevent invalid item counts and page sizes.
+    // Prevent negative or invalid item counts.
     const safeTotalItems = Number.isFinite(totalItems)
         ? Math.max(0, Math.floor(totalItems))
         : 0;
 
+    // Ensure each page can contain at least one item.
     const safeItemsPerPage =
         Number.isFinite(itemsPerPage) && itemsPerPage > 0
             ? Math.max(1, Math.floor(itemsPerPage))
             : 10;
 
-    // Calculate how many pages are needed.
+    // Calculate the total number of pages.
     const totalPages = Math.max(
         1,
         Math.ceil(safeTotalItems / safeItemsPerPage)
     );
 
-    // Keep page numbers between 1 and the last page.
+    // Keep page numbers within the valid range.
     const clampPage = (page: number): number => {
         if (!Number.isFinite(page)) {
             return 1;
@@ -48,19 +49,18 @@ export default function usePagination(
         );
     };
 
-    // Store the requested page in React state.
+    // Store the selected page.
     const [requestedPage, setRequestedPage] = useState<number>(
         () => clampPage(initialPage)
     );
 
-    // Keep the displayed page valid if totalItems changes.
+    // Ensure the current page remains valid.
     const currentPage = clampPage(requestedPage);
 
-    // Calculate the indexes for the current page.
+    // Calculate the first item's index.
     const startIndex = (currentPage - 1) * safeItemsPerPage;
 
-    // The ending index is inclusive.
-    // An empty list has no valid ending index.
+    // Calculate the last item's index (inclusive).
     const endIndex =
         safeTotalItems === 0
             ? -1
@@ -69,36 +69,36 @@ export default function usePagination(
                 safeTotalItems - 1
             );
 
-    // Count how many items appear on the current page.
+    // Count the items displayed on the current page.
     const itemsOnCurrentPage =
         safeTotalItems === 0
             ? 0
             : endIndex - startIndex + 1;
 
-    // Determine whether navigation is possible.
+    // Determine whether navigation is available.
     const canNextPage = currentPage < totalPages;
     const canPrevPage = currentPage > 1;
 
-    // Jump to a specific valid page.
+    // Navigate directly to a specific page.
     const setPage = (pageNumber: number) => {
         setRequestedPage(clampPage(pageNumber));
     };
 
-    // Advance one page without exceeding the last page.
+    // Navigate forward without exceeding the last page.
     const nextPage = () => {
         setRequestedPage((previous) =>
             Math.min(clampPage(previous) + 1, totalPages)
         );
     };
 
-    // Go back one page without going below page one.
+    // Navigate backward without going below page one.
     const prevPage = () => {
         setRequestedPage((previous) =>
             Math.max(clampPage(previous) - 1, 1)
         );
     };
 
-    // Expose pagination values and navigation functions.
+    // Return the complete pagination API.
     return {
         currentPage,
         totalPages,
