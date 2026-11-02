@@ -1,122 +1,83 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import usePagination from "./hooks/usePagination";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+// Create sample data to demonstrate pagination.
+const items = Array.from(
+  { length: 23 },
+  (_, index) => `Item ${index + 1}`
+);
+
+export default function App() {
+  // Display five items per page.
+  const {
+    currentPage,
+    totalPages,
+    startIndex,
+    endIndex,
+    itemsOnCurrentPage,
+    setPage,
+    nextPage,
+    prevPage,
+    canNextPage,
+    canPrevPage,
+  } = usePagination(items.length, 5);
+
+  // Extract only the items belonging to the current page.
+  const visibleItems = items.slice(startIndex, endIndex + 1);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
+    <main>
+      <h1>Custom Hooks Lab</h1>
+
+      <section>
+        <h2>Pagination Demo</h2>
+
+        <p>
+          Page {currentPage} of {totalPages}
+        </p>
+
+        <p>Items on this page: {itemsOnCurrentPage}</p>
+
+        <ul>
+          {visibleItems.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+          <button
+            type="button"
+            onClick={prevPage}
+            disabled={!canPrevPage}
+          >
+            Previous
+          </button>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+          <button
+            type="button"
+            onClick={nextPage}
+            disabled={!canNextPage}
+          >
+            Next
+          </button>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+
+        <div>
+          {Array.from(
+            { length: totalPages },
+            (_, index) => index + 1
+          ).map((page) => (
+            <button
+              key={page}
+              type="button"
+              onClick={() => setPage(page)}
+              disabled={currentPage === page}
+            >
+              {page}
+            </button>
+          ))}
         </div>
       </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    </main>
+  );
 }
-
-export default App
