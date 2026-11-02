@@ -1,0 +1,152 @@
+/* Main application container */
+#root {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+/* Application layout */
+main {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+/* Main heading spans both columns. */
+main>h1 {
+  grid-column: 1 / -1;
+  margin: 0 0 8px;
+  color: #0f172a;
+  font-size: 2.25rem;
+  text-align: center;
+}
+
+/* Individual demo cards */
+section {
+  min-width: 0;
+  padding: 28px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+/* Card headings */
+section h2 {
+  margin: 0 0 20px;
+  color: #1e293b;
+  font-size: 1.4rem;
+}
+
+/* Supporting text */
+section p {
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* Pagination item list */
+section ul {
+  display: grid;
+  gap: 8px;
+  margin: 20px 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Individual pagination items */
+section li {
+  padding: 10px 14px;
+  background-color: #f1f5f9;
+  border-radius: 8px;
+  color: #334155;
+}
+
+/* Space between navigation groups */
+section>div {
+  margin-top: 16px;
+}
+
+/* Shared button styles */
+button {
+  margin: 4px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Button hover effect */
+button:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+/* Disabled pagination buttons */
+button:disabled {
+  background-color: #cbd5e1;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+/* Search field label */
+label {
+  display: block;
+  margin-bottom: 10px;
+  color: #334155;
+  font-weight: 600;
+}
+
+/* Search input */
+input {
+  width: 100%;
+  max-width: 280px;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #0f172a;
+  font-size: 1rem;
+}
+
+/* Accessible keyboard focus */
+input:focus-visible,
+button:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+/* Keep long search values inside the card. */
+section p {
+  overflow-wrap: anywhere;
+}
+
+/* Stack cards vertically on smaller screens. */
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+
+  main>h1 {
+    font-size: 1.8rem;
+  }
+
+  section {
+    padding: 22px;
+  }
+}
+
+/* Reduce spacing on narrow mobile screens. */
+@media (max-width: 480px) {
+  #root {
+    padding: 24px 12px;
+  }
+
+  button {
+    padding: 10px 12px;
+  }
+}
